@@ -3,15 +3,18 @@ from torch.nn import Module, Linear
 from torch.nn.functional import relu
 
 class DuelingDDQN(Module):
-    """A Dueling Double Deep Q-Networks (Dueling DDQN) for Pong."""
+    """A Dueling Double Deep Q-Networks (Dueling DDQN)."""
 
-    def __init__(self, obs_size):
+    def __init__(self, obs_size, use_cuda=True):
         """Create new Dueling DDQN.
         
         Parameters
         --------------------
         obs_size: int
-            observation size"""
+            observation size
+            
+        use_cuda: bool, optional
+            True if cuda is used, False otherwise"""
 
         super(DuelingDDQN, self).__init__()
 
@@ -23,7 +26,7 @@ class DuelingDDQN(Module):
         self._out = Linear(256, 3)
 
         # --------------------
-        self.device = tc.device("cuda:0" if tc.cuda.is_available() else "cpu")
+        self.device = tc.device("cuda:0" if tc.cuda.is_available() and use_cuda else "cpu")
         self.to(self.device)
 
     def forward(self, x):
