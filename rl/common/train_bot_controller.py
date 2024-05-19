@@ -76,12 +76,12 @@ class TrainingBotController(Controller):
         #Has this bot did a point?
         if my_current_score > self._my_last_score:
             self._current_reward = 1.0
-        #Has this bot collided ball?
-        elif self.is_colliding_ball:
-            self._current_reward = 0.1
         #Has opponent did a point?
         elif current_opponent_score > self._last_opponent_score:
             self._current_reward = -1.0
+        #Has this bot collided ball?
+        elif self.is_colliding_ball:
+            self._current_reward = 0.1
         #Nothing happens.
         else:
             self._current_reward = 0.0

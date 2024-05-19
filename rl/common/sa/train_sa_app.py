@@ -1,51 +1,32 @@
 import numpy as np
 
-from enum import Enum
 from pong.controller.controller import PaddlePosition
 from pong.controller.basic_bot_controller import BasicBotController
 from pong.controller.bot_controller import BotController
 
 from ..train_app import TrainingApp
-
-
-# ==================================================
-# ================== OPPONENT TYPE =================
-# ==================================================
-
-class OpponentType(Enum):
-    """Opponent type against to train"""
-    BASIC_BOT = 0           #Train against a basic bot.
-    BOT = 1                 #Train against a high skill bot.
-
-
-# ==================================================
-# ============ TRANINNG SINGLE AGENT APP ===========
-# ==================================================
+from .opponent_type import OpponentType
 
 class TrainingSAApp(TrainingApp):
     """A base application for training a single agent on Pong."""
 
-    def __init__(self, training_session, opponent_type):
+    def __init__(self, training_session):
         """Create new application for training of an agent.
         
         Parameters
         --------------------
         training_session: TrainingSASession
             a training session
-            
-        opponent_type: OpponentType
-            a opponent type against to train.
         """
 
         super().__init__(training_session)
-        self._opponent_type = opponent_type
 
     def _create_controller_2(self):
         #Create basic bot controller?
-        if self._opponent_type == OpponentType.BASIC_BOT:
+        if self._training_session.opponent_type == OpponentType.BASIC_BOT:
             self._controller_2 = BasicBotController(self._current_game.paddle_2, PaddlePosition.RIGHT, self._current_game.ball)
         #Create high skill bot controller?
-        elif self._opponent_type == OpponentType.BOT:
+        elif self._training_session.opponent_type == OpponentType.BOT:
             self._controller_2 = BotController(self._current_game.paddle_2, PaddlePosition.RIGHT, self._current_game)
 
     def _get_infos(self):

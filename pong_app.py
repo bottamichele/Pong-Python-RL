@@ -10,14 +10,15 @@ from pong.controller.player_controller import PlayerController
 from pong.controller.basic_bot_controller import BasicBotController
 from pong.controller.bot_controller import BotController
 
+from rl.common.sa.opponent_type import OpponentType
+from rl.deep_q_networks.dueling_ddqn.sa.dddqn_sa_controller import DuelingDDQNSAController
 
 class ControllerType(Enum):
     """Controller type to use for paddle."""
     PLAYER = 0                      #Player controller
     BASIC_BOT = 1                   #Bot controller with basic strategy
     BOT = 2                         #Bot controller with advanced strategy
-    DDQN_BOT = 3                    #Bot controller that uses DDQN
-    DUELING_DDQN_BOT = 4            #Bot controller that uses Dueling DDQN
+    DUELING_DDQN_SA_BOT = 4         #Bot controller that uses Dueling DDQN against either BASIC_BOT or BOT.
 
 
 class Pong:
@@ -68,12 +69,27 @@ class Pong:
         
         paddle_to_control = current_game.paddle_1 if paddle_position == PaddlePosition.LEFT else current_game.paddle_2
 
+        #Player Controller
         if controller_type == ControllerType.PLAYER:
             return PlayerController(paddle_to_control, paddle_position)
+        #Basic Bot Controller
         elif controller_type == ControllerType.BASIC_BOT:
             return BasicBotController(paddle_to_control, paddle_position, current_game.ball)
+        #Bot Controller
         elif controller_type == ControllerType.BOT:
             return BotController(paddle_to_control, paddle_position, current_game)
+        #Dueling DDQN Bot controller against BASIC_BOT or BOT
+        elif controller_type == ControllerType.DUELING_DDQN_SA_BOT:
+            if paddle_position == PaddlePosition.LEFT:
+                raise ValueError("DUELING_DDQN_SA_BOT not supported for left paddle.")
+
+            if isinstance(self._controller_1, BasicBotController):
+                opponent_type = OpponentType.BASIC_BOT
+            elif isinstance(self._controller_1, BotController):
+                opponent_type = OpponentType.BOT
+            
+            return DuelingDDQNSAController(current_game, opponent_type)
+
 
     def _init(self):
         pygame.init()
