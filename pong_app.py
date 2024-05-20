@@ -87,6 +87,8 @@ class Pong:
                 opponent_type = OpponentType.BASIC_BOT
             elif isinstance(self._controller_1, BotController):
                 opponent_type = OpponentType.BOT
+            else:
+                raise ValueError("DUELING_DDQN_SA_BOT not supported against agaist other controllers.")
             
             return DuelingDDQNSAController(current_game, opponent_type)
 
