@@ -3,10 +3,9 @@ import torch as tc
 
 from pong.controller.controller import PaddlePosition
 from rl.common.train_bot_controller import TrainingBotController
-from rl.common.utils import get_full_observation_normalized, get_full_inverse_observation_normalized
 
-class DuelingDDQNTraininingSABotController(TrainingBotController):
-    """A bot controller that uses Dueling Double Deep Q-Networks (Dueling DDQN) to be trained with self-play method."""
+class DuelingDDQNTraininingSPBotController(TrainingBotController):
+    """A bot controller that uses Dueling Double Deep Q-Networks (Dueling DDQN) to be trained on Pong and self-play technique."""
 
     def __init__(self, current_game, training_session):
         """Create new Dueling DDQN bot controller to be trained.
@@ -16,7 +15,7 @@ class DuelingDDQNTraininingSABotController(TrainingBotController):
         current_game: Game
             current game session
             
-        training_session: DuelingDDQNTrainingSPASession
+        training_session: DuelingDDQNTrainingSPSession
             training session"""
 
         self._rng = np.random.default_rng()
@@ -36,7 +35,6 @@ class DuelingDDQNTraininingSABotController(TrainingBotController):
             action = tc.argmax(q).item()
 
         self._current_action = action
-        self._training_session.history_q.append( (q.cpu())[0, action].item() )
 
     def _train_step(self):
         #Store transiction on memory replay.

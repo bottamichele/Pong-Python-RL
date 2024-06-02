@@ -2,13 +2,13 @@ import torch as tc
 
 from pong.controller.controller import PaddlePosition
 from rl.common.utils import get_full_observation_normalized, get_full_inverse_observation_normalized, FULL_OBSERVATION_SIZE
-from rl.deep_q_networks.common.base_dqn_spa_controller import BaseDQNSPABotController
+from rl.deep_q_networks.common.base_dqn_sp_controller import BaseDQNSPBotController
 
 from .costants import MODEL_PATH, MODEL_NAME
 from .dueling_ddqn import DuelingDDQN
 
-class DuelingDDQNSPAController(BaseDQNSPABotController):
-    """A bot that uses Dueling Deep Q-Networks (Dueling DDQN) to play on Pong."""
+class DuelingDDQNSPController(BaseDQNSPBotController):
+    """A bot that uses Dueling Deep Q-Networks (Dueling DDQN) to play on Pong (trained with self-play technique)."""
 
     def __init__(self, position, current_game):
         """Create new controller.
@@ -31,4 +31,3 @@ class DuelingDDQNSPAController(BaseDQNSPABotController):
         model.load_state_dict(tc.load(MODEL_PATH + MODEL_NAME + ".pth"))
 
         return model
-        

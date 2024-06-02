@@ -16,5 +16,5 @@ class TrainSPPongContactListener(TrainPongContactListener):
             paddle = contact.fixtureA.userData if isinstance(contact.fixtureA.userData, Paddle) else contact.fixtureB.userData
 
             #Is controller_2's paddle?
-            if self.controller_1 is not None and self.current_game.paddle_2 == paddle:
-                self.controller_1.n_touch += 1
+            if self.controller_2 is not None and self.current_game.paddle_2 == paddle:
+                self.controller_2.n_touch += 1

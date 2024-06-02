@@ -18,7 +18,7 @@ class TrainingSPApp(TrainingApp):
         self._p2_infos = ""                     #Infos of right controller.
 
     def _create_contact_listener(self):
-        return TrainSPPongContactListener()
+        self._contact_listener = TrainSPPongContactListener()
 
     def _get_infos(self):
         self._p1_infos = "n. touch = {}; reward = {:.1f}".format(self._controller_1.n_touch, self._controller_1.total_reward)

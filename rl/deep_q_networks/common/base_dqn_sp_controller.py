@@ -4,8 +4,8 @@ import torch as tc
 from abc import abstractmethod
 from pong.controller.controller import Controller, PaddlePosition, MovingType
 
-class BaseDQNSPABotController(Controller):
-    """A base class of an any version of Deep Q-Networks (agent trained with self-play method) that is used by bot controller to play on Pong."""
+class BaseDQNSPBotController(Controller):
+    """A base class of an any version of Deep Q-Networks (agent trained with self-play technique) that is used by bot controller to play on Pong."""
 
     def __init__(self, position, current_game, get_obs_fun, obs_size):
         """Create new controller.
