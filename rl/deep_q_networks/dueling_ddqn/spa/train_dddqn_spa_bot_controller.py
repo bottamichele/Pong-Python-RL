@@ -6,9 +6,9 @@ from rl.common.train_bot_controller import TrainingBotController
 from rl.common.utils import get_full_observation_normalized, get_full_inverse_observation_normalized
 
 class DuelingDDQNTraininingSABotController(TrainingBotController):
-    """A bot controller that uses Dueling Double Deep Q-Networks (Dueling DDQN) to be trained against itself (self-play method)."""
+    """A bot controller that uses Dueling Double Deep Q-Networks (Dueling DDQN) to be trained with self-play method."""
 
-    def __init__(self, position, current_game, training_session):
+    def __init__(self, current_game, training_session):
         """Create new Dueling DDQN bot controller to be trained.
         
         Parameters
@@ -21,11 +21,7 @@ class DuelingDDQNTraininingSABotController(TrainingBotController):
 
         self._rng = np.random.default_rng()
            
-        super().__init__(current_game.paddle_1 if position == PaddlePosition.LEFT else current_game.paddle_2, 
-                         position, 
-                         current_game, 
-                         training_session,
-                         get_full_observation_normalized if position == PaddlePosition.LEFT else get_full_inverse_observation_normalized)
+        super().__init__(current_game.paddle_1, PaddlePosition.LEFT, current_game, training_session)
         self._training_session.states_done = 0
 
     def _chose_action(self):

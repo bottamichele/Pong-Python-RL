@@ -2,7 +2,7 @@ import torch as tc
 import pickle
 import os
 
-from rl.common.spa.training_spa_session import TrainingSPASession
+from rl.common.sp.training_sp_session import TrainingSPASession
 from rl.common.utils import FULL_OBSERVATION_SIZE
 from rl.deep_q_networks.common.memory_replay import UniformMemory
 
@@ -14,10 +14,37 @@ from torch.nn import MSELoss
 from .costants import TRAINING_SESSION_PATH, MODEL_PATH, MODEL_NAME
 from .dueling_ddqn import DuelingDDQN
 
+
+# ==================================================
+# ===================== POLICY =====================
+# ==================================================
+class Policy:
+    """An agent's policy to be trained."""
+
+    def __init__(self, lr):
+        """Create new policy to train.
+        
+        Parameter
+        --------------------
+        lr: float
+            learning rate"""
+        
+        self.model = DuelingDDQN(FULL_OBSERVATION_SIZE)                 
+        self.target = DuelingDDQN(FULL_OBSERVATION_SIZE)                
+        self.optimizer = Adam(self.model.parameters(), lr=lr)           
+        self.total_states = 0                                           #Number of total states done with this policy.
+        self.count_episodes = 0                                         #Number of episodes done with this policy.
+
+        self.target.copy_from(self.model)
+
+# ==================================================
+# ========= DUELING DDQN SELF PLAY SESSION =========
+# ==================================================
+
 class DuelingDDQNTrainingSPASession(TrainingSPASession):
     """A session for traning of an agent thats uses Dueling DDQN with self-play method."""
     
-    def __init__(self, n_episodes, mem_size, batch_size, update_rate_target, lr=10**-4, gamma=0.99, eps_init=1.0, eps_min=0.01, eps_decay=9.9*10**-6):
+    def __init__(self, n_episodes, mem_size, batch_size, update_rate_target, lr=10**-4, gamma=0.99, eps_init=1.0, eps_min=0.01, eps_decay=9.9*10**-6, stack_pol_size=8):
         """Create new Dueling DDQN training session with self-play method.
         
         Parameters
@@ -46,12 +73,15 @@ class DuelingDDQNTrainingSPASession(TrainingSPASession):
         eps_min: float, optional
             minimun epsilon value allowed
             
-        eps_decay: float, optional"""
+        eps_decay: float, optional
+            epsilon decay value
+            
+        stack_pol_size: int, optional
+            stacl policies size"""
         
         super().__init__()
         self.n_episodes = n_episodes
-        self.memory_p1 = UniformMemory(mem_size, FULL_OBSERVATION_SIZE)
-        self.memory_p2 = UniformMemory(mem_size, FULL_OBSERVATION_SIZE)
+        self.memory = UniformMemory(mem_size, FULL_OBSERVATION_SIZE)
         self.batch_size = batch_size
         self.update_rate_target = update_rate_target
         self.lr = lr
@@ -61,10 +91,10 @@ class DuelingDDQNTrainingSPASession(TrainingSPASession):
         self.epsilon_decay = eps_decay
         self.states_done = 0                                                #Total states done on current episode.
         self.total_states_done = 0                                          #Total states done.
-        self.history_q_p1 = deque(maxlen=25000)
-        self.history_q_p2 = deque(maxlen=25000)
 
-        #Training model for left controller.
+        #Training models.
+        self.stack_policies = deque(maxlen=stack_pol_size)
+        self.current_policy = Policy(lr)
         self.model_p1 = DuelingDDQN(FULL_OBSERVATION_SIZE)
         self.target_p1 = DuelingDDQN(FULL_OBSERVATION_SIZE)
         self.optimizer_p1 = Adam(self.model_p1.parameters(), lr=lr)
@@ -75,9 +105,6 @@ class DuelingDDQNTrainingSPASession(TrainingSPASession):
         self.optimizer_p2 = Adam(self.model_p2.parameters(), lr=lr)
 
         self.loss_function = MSELoss()
-
-        self.target_p1.copy_from(self.model_p1)
-        self.target_p2.copy_from(self.model_p2)
 
     def is_ended(self):
         return self.episode > self.n_episodes

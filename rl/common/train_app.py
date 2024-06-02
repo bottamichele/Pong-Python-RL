@@ -70,8 +70,6 @@ class TrainingApp(ABC):
 
             if isinstance(self._controller_1, TrainingBotController):
                 self._contact_listener.controller_1 = self._controller_1
-            if isinstance(self._controller_2, TrainingBotController):
-                self._contact_listener.controller_2 = self._controller_2
 
             #Game is started.
             while not self._current_game.is_ended():
