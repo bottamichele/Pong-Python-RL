@@ -13,12 +13,15 @@ from pong.controller.bot_controller import BotController
 from rl.common.sa.opponent_type import OpponentType
 from rl.deep_q_networks.dueling_ddqn.sa.dddqn_sa_controller import DuelingDDQNSAController
 
+from rl.deep_q_networks.dueling_ddqn.sp.dddqn_sp_controller import DuelingDDQNSPController
+
 class ControllerType(Enum):
     """Controller type to use for paddle."""
     PLAYER = 0                      #Player controller
     BASIC_BOT = 1                   #Bot controller with basic strategy
     BOT = 2                         #Bot controller with advanced strategy
     DUELING_DDQN_SA_BOT = 4         #Bot controller that uses Dueling DDQN against either BASIC_BOT or BOT.
+    DUELING_DDQN_SP_BOT = 5
 
 
 class Pong:
@@ -78,6 +81,9 @@ class Pong:
         #Bot Controller
         elif controller_type == ControllerType.BOT:
             return BotController(paddle_to_control, paddle_position, current_game)
+        #
+        elif controller_type == ControllerType.DUELING_DDQN_SP_BOT:
+            return DuelingDDQNSPController(paddle_position, current_game)
         #Dueling DDQN Bot controller against BASIC_BOT or BOT
         elif controller_type == ControllerType.DUELING_DDQN_SA_BOT:
             if paddle_position == PaddlePosition.LEFT:

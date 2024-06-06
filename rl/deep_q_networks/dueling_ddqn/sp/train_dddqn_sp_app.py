@@ -4,6 +4,7 @@ from rl.common.sp.train_sp_app import TrainingSPApp
 
 from .train_dddqn_sp_bot_controller import DuelingDDQNTraininingSPBotController
 from .dddqn_opponent_sp_controller import DuelingDDQNOpponentSPController
+from .test_dddqn_bot_controller import TestingDuelingDDQNBotController
 
 class DDDQNTrainingSPApp(TrainingSPApp):
     """Application to train a bot that uses Dueling DDQN and self-play technique."""
@@ -16,13 +17,16 @@ class DDDQNTrainingSPApp(TrainingSPApp):
         training_session: DuelingDDQNTrainingSPSession
             a training session"""
 
-        super().__init__(training_session)
+        super().__init__(training_session, 50)
 
     def _create_controller_1(self):
         self._controller_1 = DuelingDDQNTraininingSPBotController(self._current_game, self._training_session)
 
     def _create_controller_2(self):
         self._controller_2 = DuelingDDQNOpponentSPController(self._training_session, self._current_game, self._contact_listener)
+
+    def _create_test_bot_controller(self, a_game):
+        return TestingDuelingDDQNBotController(self._training_session, a_game)
 
     def _get_infos(self):
         current_infos = super()._get_infos()

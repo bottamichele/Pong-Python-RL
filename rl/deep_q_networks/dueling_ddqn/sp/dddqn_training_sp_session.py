@@ -40,7 +40,7 @@ class DuelingDDQNPolicy(Policy):
 class DuelingDDQNTrainingSPSession(TrainingSPSession):
     """A session for traning of an agent thats uses Dueling DDQN with self-play method."""
     
-    def __init__(self, n_episodes, mem_size, batch_size, update_rate_target, lr=10**-4, gamma=0.99, eps_init=1.0, eps_min=0.01, eps_decay=9.9*10**-6, n_policies=10, copy_policy_games=10, change_opp_policy_games=5, play_last_policy_prob=0.5):
+    def __init__(self, n_episodes, mem_size, batch_size, update_rate_target, lr=10**-4, gamma=0.99, eps_init=1.0, eps_min=0.01, eps_decay=9.9*10**-6, n_policies=8, copy_policy_games=20, change_opp_policy_games=10, play_last_policy_prob=0.5):
         """Create new Dueling DDQN training session with self-play method.
         
         Parameters
