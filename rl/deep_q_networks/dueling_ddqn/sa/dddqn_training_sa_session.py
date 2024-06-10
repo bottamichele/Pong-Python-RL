@@ -122,7 +122,7 @@ class DDDQNTrainingSASession(TrainingSASession):
         last_infos = pickle.load(training_session_file)
         training_session_file.close()
 
-        self.episode            = last_infos["episode"]
+        self.episode            = last_infos["episode"] + 1
         self.n_episodes         = last_infos["n_episodes"]
         self.opponent_type      = last_infos["opponent_type"]
         self.total_states_done  = last_infos["total_states_done"]

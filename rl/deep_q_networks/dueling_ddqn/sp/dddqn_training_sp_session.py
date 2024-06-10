@@ -167,7 +167,7 @@ class DuelingDDQNTrainingSPSession(TrainingSPSession):
         last_infos = pickle.load(training_session_file)
         training_session_file.close()
 
-        self.episode                    = last_infos["episode"]
+        self.episode                    = last_infos["episode"] + 1
         self.n_episodes                 = last_infos["n_episodes"]
         self.total_states_done          = last_infos["total_states_done"]
         self.gamma                      = last_infos["gamma"]
