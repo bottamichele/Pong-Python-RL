@@ -15,8 +15,7 @@ if __name__ == "__main__":
         application = DDQNTrainingSAApp(training_session)
         application.train()
     else:
-        training_session = DDQNTrainingSPSession(500, 750000, 64, 5000, eps_decay=3.96*10**-6, n_policies=6, copy_policy_games=20, change_opp_policy_games=10)
-        training_session.load_last_training_session()
-        training_session.n_episodes = 1000
+        training_session = DDQNTrainingSPSession(1000, 750000, 64, 5000, eps_decay=3.96*10**-6, n_policies=6, copy_policy_games=20, change_opp_policy_games=10)
+        #training_session.load_last_training_session()
         application = DDQNTrainingSPApp(training_session)
         application.train()
