@@ -4,7 +4,7 @@ import os
 
 from rl.common.sa.training_sa_session import TrainingSASession
 from rl.common.utils import FULL_OBSERVATION_SIZE
-from rl.deep_q_networks.common.memory_replay import UniformMemory
+from rl.deep_q_networks.common.memory_replay.uniform_memory import UniformMemory
 
 from collections import deque
 

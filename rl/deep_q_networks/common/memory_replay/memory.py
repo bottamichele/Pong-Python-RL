@@ -2,10 +2,6 @@ import numpy as np
 
 from abc import ABC, abstractmethod
 
-# ==================================================
-# ============== BASE CLASS OF MEMORY ==============
-# ==================================================
-
 class Memory(ABC):
     """Base class of memory replay"""
 
@@ -126,18 +122,3 @@ class Memory(ABC):
             next observations done batch sampled from memory replay"""
         
         pass
-
-# ==================================================
-# ================= UNIFORM MEMORY =================
-# ==================================================
-
-class UniformMemory(Memory):
-    """A uniform memory replay. It samples a batch randomly from memory."""
-
-    def __init__(self, max_size, obs_size):
-        super().__init__(max_size, obs_size)
-        self._rng = np.random.default_rng()
-
-    def sample_batch(self, batch_size):
-        indices_batch = self._rng.choice(self.size, batch_size, False)
-        return self._sample_batch_idxs(indices_batch)
