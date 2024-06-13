@@ -22,9 +22,9 @@ class CumulativePriority:
         alpha: float
             alpha value of Proportional Prioritized Memory"""
         
-        self._n_leaves = num_leaves                                                             #Number of leaves of binary tree.
-        self._depth = int(log2(num_leaves)) + 1 if num_leaves % 2 != 0 else log2(num_leaves)    #Depth of binary tree.
-        self._tree = np.zeros(2**(self._depth + 1) - 1, dtype=np.float32)                       #Binary tree.
+        self._n_leaves = num_leaves                                                                                 #Number of leaves of binary tree.
+        self._depth = int(log2(num_leaves)) + 1 if isinstance(log2(num_leaves), float) else int(log2(num_leaves))   #Depth of binary tree.
+        self._tree = np.zeros(2**(self._depth + 1) - 1, dtype=np.float32)                                           #Binary tree.
         self._alpha = alpha
 
     def _get_parent_index(self, idx_node):
@@ -230,21 +230,19 @@ class ProportionalPrioritizedMemory(Memory):
         weights /= np.max(weights)
 
         self._idxs_sampled = idxs
-        return self._sample_batch_idxs(idxs), weights
+        obs_b, action_b, reward_b, next_obs_b, next_obs_done_b = self._sample_batch_idxs(idxs)
+        return obs_b, action_b, reward_b, next_obs_b, next_obs_done_b, weights
     
-    def update_priorities(self, td_errors, clip=1):
+    def update_priorities(self, td_errors):
         """Update priorities of current batch sampled.
         
         Parameter
         --------------------
         td_errors: ndarray
-            temporal difference errors
-            
-        clip: float, optional
-            maximun value for clip"""
+            temporal difference errors"""
         
         assert len(self._idxs_sampled) == len(td_errors)
 
         for i in range(self._idxs_sampled.size):
             idx = self._idxs_sampled[i]
-            self._priorities[idx] = np.clip(abs(td_errors[i]), 0, clip) + self._epsilon
+            self._priorities[idx] = abs(td_errors[i]) + self._epsilon
