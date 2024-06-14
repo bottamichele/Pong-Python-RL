@@ -222,14 +222,8 @@ class ProportionalPrioritizedMemory(Memory):
         probs = np.zeros(batch_size, dtype=np.float32)
 
         for i in range(batch_size):
-            #Sample until a index of transiction is not a duplicate
-            idx_trans_sampled = self._cum_prios.get_random_transiction()
-            while (idx_trans_sampled + 1) in (idxs + 1):
-                idx_trans_sampled = self._cum_prios.get_random_transiction()
-
-            #Store transiction sampled.
-            idxs[i] = idx_trans_sampled
-            probs[i] = self._cum_prios.get_probability_of_transiction(idx_trans_sampled)
+            idxs[i] = self._cum_prios.get_random_transiction()
+            probs[i] = self._cum_prios.get_probability_of_transiction(idxs[i])
 
         #Compute weights.
         weights = (self._max_size * probs)**(-self.beta)
