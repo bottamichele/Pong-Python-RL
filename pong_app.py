@@ -12,6 +12,7 @@ from pong.controller.bot_controller import BotController
 
 from rl.common.sa.opponent_type import OpponentType
 from rl.deep_q_networks.dueling_ddqn.sa.dddqn_sa_controller import DuelingDDQNSAController
+from rl.deep_q_networks.dueling_ddqn.sa_per.dddqn_sa_per_controller import DuelingDDQN_PER_SAController
 
 from rl.deep_q_networks.dueling_ddqn.sp.dddqn_sp_controller import DuelingDDQNSPController
 
@@ -23,9 +24,10 @@ class ControllerType(Enum):
     BASIC_BOT = 1                   #Bot controller with basic strategy
     BOT = 2                         #Bot controller with advanced strategy
     DUELING_DDQN_SA_BOT = 4         #Bot controller that uses Dueling DDQN against either BASIC_BOT or BOT.
-    DUELING_DDQN_SP_BOT = 5         #Bot controller that uses Dueling DDQN trained with self-play technique.
-    DDQN_SA_BOT = 6                 #Bot controller that uses DDQN against either BASIC_BOT or BOT.
-    DDQN_SP_BOT = 7                 #Bot controller that uses DDQN trained with self-play technique.
+    DUELING_DDQN_PER_SA_BOT = 5     #Bot controller that uses Dueling DDQN (trained with PER) against either BASIC_BOT or BOT.
+    DUELING_DDQN_SP_BOT = 6         #Bot controller that uses Dueling DDQN trained with self-play technique.
+    DDQN_SA_BOT = 7                 #Bot controller that uses DDQN against either BASIC_BOT or BOT.
+    DDQN_SP_BOT = 8                 #Bot controller that uses DDQN trained with self-play technique.
 
 
 class Pong:
@@ -74,6 +76,21 @@ class Pong:
         current_game: Game
             current game session"""
         
+        def check_controller_sa():
+            if paddle_position == PaddlePosition.LEFT:
+                raise ValueError("Controller not supported for left paddle.")
+
+            if not isinstance(self._controller_1, (BasicBotController, BotController)):
+                raise ValueError("Controller not supported against agaist other.")
+            
+        def get_opp_controller_sa():
+            if isinstance(self._controller_1, BasicBotController):
+                opponent_type = OpponentType.BASIC_BOT
+            elif isinstance(self._controller_1, BotController):
+                opponent_type = OpponentType.BOT
+
+            return opponent_type
+
         paddle_to_control = current_game.paddle_1 if paddle_position == PaddlePosition.LEFT else current_game.paddle_2
 
         #Player Controller
@@ -93,17 +110,12 @@ class Pong:
             return DuelingDDQNSPController(paddle_position, current_game)
         #Dueling DDQN Bot controller against BASIC_BOT or BOT
         elif controller_type == ControllerType.DUELING_DDQN_SA_BOT:
-            if paddle_position == PaddlePosition.LEFT:
-                raise ValueError("DUELING_DDQN_SA_BOT not supported for left paddle.")
-
-            if isinstance(self._controller_1, BasicBotController):
-                opponent_type = OpponentType.BASIC_BOT
-            elif isinstance(self._controller_1, BotController):
-                opponent_type = OpponentType.BOT
-            else:
-                raise ValueError("DUELING_DDQN_SA_BOT not supported against agaist other controllers.")
-            
-            return DuelingDDQNSAController(current_game, opponent_type)
+            check_controller_sa()
+            return DuelingDDQNSAController(current_game, get_opp_controller_sa())
+        #Dueling DDQN Bot controller (trained with PER) against BASIC_BOT or BOT
+        elif controller_type == ControllerType.DUELING_DDQN_PER_SA_BOT:
+            check_controller_sa()
+            return DuelingDDQN_PER_SAController(current_game, get_opp_controller_sa())
 
 
     def _init(self):
