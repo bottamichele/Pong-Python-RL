@@ -1,8 +1,9 @@
 import torch as tc
 
 from rl.deep_q_networks.common.base_dqn_sa_controller import BaseDQNSABotController
+from rl.common.sa.training_sa_session import MODEL_PATH
 
-from .costants import MODEL_PATH, MODEL_NAME
+from .costants import MODEL_NAME
 from .ddqn import DDQN
 
 class DDQNSAController(BaseDQNSABotController):

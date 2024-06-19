@@ -2,9 +2,10 @@ import torch as tc
 
 from pong.controller.controller import PaddlePosition
 from rl.common.utils import get_full_observation_normalized, get_full_inverse_observation_normalized, FULL_OBSERVATION_SIZE
+from rl.common.sp.training_sp_session import MODEL_PATH
 from rl.deep_q_networks.common.base_dqn_sp_controller import BaseDQNSPBotController
 
-from .costants import MODEL_PATH, MODEL_NAME
+from .costants import MODEL_NAME
 from .ddqn import DDQN
 
 class DDQNSPController(BaseDQNSPBotController):
