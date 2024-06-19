@@ -1,12 +1,8 @@
-import numpy as np
-
-from rl.common.sp.train_sp_app import TrainingSPApp
+from rl.deep_q_networks.common.self_play.base_train_dqn_sp_app import BaseTrainDQNSPApp
 
 from .train_ddqn_sp_bot_controller import DDQNTraininingSPBotController
-from .ddqn_opponent_sp_controller import DDQNOpponentSPController
-from .test_ddqn_bot_controller import TestingDDQNBotController
 
-class DDQNTrainingSPApp(TrainingSPApp):
+class DDQNTrainingSPApp(BaseTrainDQNSPApp):
     """Application to train a bot that uses DDQN and self-play technique."""
 
     def __init__(self, training_session):
@@ -21,12 +17,6 @@ class DDQNTrainingSPApp(TrainingSPApp):
 
     def _create_controller_1(self):
         self._controller_1 = DDQNTraininingSPBotController(self._current_game, self._training_session)
-
-    def _create_controller_2(self):
-        self._controller_2 = DDQNOpponentSPController(self._training_session, self._current_game, self._contact_listener)
-
-    def _create_test_bot_controller(self, a_game):
-        return TestingDDQNBotController(self._training_session, a_game)
 
     def _get_infos(self):
         current_infos = super()._get_infos()

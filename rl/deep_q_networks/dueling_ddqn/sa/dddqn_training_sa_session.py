@@ -2,7 +2,7 @@ import torch as tc
 import pickle
 import os
 
-from rl.common.sa.training_sa_session import TrainingSASession
+from rl.common.sa.training_sa_session import TrainingSASession, MODEL_PATH
 from rl.common.utils import FULL_OBSERVATION_SIZE
 from rl.deep_q_networks.common.memory_replay.uniform_memory import UniformMemory
 
@@ -11,7 +11,7 @@ from collections import deque
 from torch.optim import Adam
 from torch.nn import MSELoss
 
-from .costants import TRAINING_SESSION_PATH, MODEL_PATH, MODEL_NAME
+from .costants import TRAINING_SESSION_PATH, MODEL_NAME
 from .dueling_ddqn import DuelingDDQN
 
 class DDDQNTrainingSASession(TrainingSASession):
