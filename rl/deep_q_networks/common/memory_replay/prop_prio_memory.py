@@ -9,7 +9,7 @@ from .memory import Memory
 # ==================================================
 
 class CumulativePriority:
-    """A complete binary tree that contains cumulative priorities (similar Prioritzed Experience Replay papar's Sum Tree)."""
+    """A complete binary tree that contains cumulative priorities (similar Prioritzed Experience Replay paper's Sum Tree)."""
 
     def __init__(self, num_leaves, alpha):
         """Create cumulative priority tree.
