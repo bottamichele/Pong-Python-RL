@@ -11,7 +11,10 @@ from rl.deep_q_networks.dueling_ddqn.sa_per.train_dddqn_per_sa_app import DDDQNT
 from rl.deep_q_networks.dueling_ddqn.sp.dddqn_training_sp_session import DuelingDDQNTrainingSPSession
 from rl.deep_q_networks.dueling_ddqn.sp.train_dddqn_sp_app import DDDQNTrainingSPApp
 
-USE_SELF_PLAY = False
+from rl.deep_q_networks.dueling_ddqn.sp_per.dddqn_training_per_sp_session import DuelingDDQNTraining_PER_SPSession
+from rl.deep_q_networks.dueling_ddqn.sp_per.train_dddqn_per_sp_app import DDDQNTraining_PER_SPApp
+
+USE_SELF_PLAY = True
 USE_PER = True
 
 if __name__ == "__main__":
@@ -25,8 +28,13 @@ if __name__ == "__main__":
         #training_session.load_last_training_session()
         application = DDDQNTraining_PER_SAApp(training_session)
         application.train()
-    else:
+    elif USE_SELF_PLAY and not USE_PER:
         training_session = DuelingDDQNTrainingSPSession(500, 750000, 64, 5000, eps_decay=3.96*10**-6, n_policies=6, copy_policy_games=20, change_opp_policy_games=10)
         #training_session.load_last_training_session()
         application = DDDQNTrainingSPApp(training_session)
+        application.train()
+    elif USE_SELF_PLAY and USE_PER:
+        training_session = DuelingDDQNTraining_PER_SPSession(500, 750000, 64, 5000, eps_decay=3.96*10**-6, n_policies=6, copy_policy_games=20, change_opp_policy_games=10)
+        training_session.load_last_training_session()
+        application = DDDQNTraining_PER_SPApp(training_session)
         application.train()

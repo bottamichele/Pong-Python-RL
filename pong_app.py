@@ -15,6 +15,7 @@ from rl.deep_q_networks.dueling_ddqn.sa.dddqn_sa_controller import DuelingDDQNSA
 from rl.deep_q_networks.dueling_ddqn.sa_per.dddqn_sa_per_controller import DuelingDDQN_PER_SAController
 
 from rl.deep_q_networks.dueling_ddqn.sp.dddqn_sp_controller import DuelingDDQNSPController
+from rl.deep_q_networks.dueling_ddqn.sp_per.dddqn_per_sp_controller import DuelingDDQN_PER_SPController
 
 from rl.deep_q_networks.ddqn.sp.ddqn_sp_controller import DDQNSPController
 
@@ -23,9 +24,10 @@ class ControllerType(Enum):
     PLAYER = 0                      #Player controller
     BASIC_BOT = 1                   #Bot controller with basic strategy
     BOT = 2                         #Bot controller with advanced strategy
-    DUELING_DDQN_SA_BOT = 4         #Bot controller that uses Dueling DDQN against either BASIC_BOT or BOT.
+    DUELING_DDQN_SA_BOT = 3         #Bot controller that uses Dueling DDQN against either BASIC_BOT or BOT.
+    DUELING_DDQN_SP_BOT = 4         #Bot controller that uses Dueling DDQN trained with self-play technique.
     DUELING_DDQN_PER_SA_BOT = 5     #Bot controller that uses Dueling DDQN (trained with PER) against either BASIC_BOT or BOT.
-    DUELING_DDQN_SP_BOT = 6         #Bot controller that uses Dueling DDQN trained with self-play technique.
+    DUELING_DDQN_PER_SP_BOT = 6     #Bot controller that uses Dueling DDQN trained with self-play technique and prioritized memory replay.
     DDQN_SA_BOT = 7                 #Bot controller that uses DDQN against either BASIC_BOT or BOT.
     DDQN_SP_BOT = 8                 #Bot controller that uses DDQN trained with self-play technique.
 
@@ -116,6 +118,9 @@ class Pong:
         elif controller_type == ControllerType.DUELING_DDQN_PER_SA_BOT:
             check_controller_sa()
             return DuelingDDQN_PER_SAController(current_game, get_opp_controller_sa())
+        #Dueling DDQN Bot controller (trained PER and self-play method).
+        elif controller_type == ControllerType.DUELING_DDQN_PER_SP_BOT:
+            return DuelingDDQN_PER_SPController(paddle_position, current_game)
 
 
     def _init(self):
