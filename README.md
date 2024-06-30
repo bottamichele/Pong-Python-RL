@@ -3,8 +3,9 @@ This repository contains Reinforcement Learning (RL) approaches applied on my pr
 This repository implements two type of agent:
 - a single agent is trained against one of Pong bots to play against one of them
 - an agent is trained against itself to play against Pong bots and human players
-The relative code of RL implemented is located on ["rl"](https://github.com/bottamichele/Pong-Python-RL/tree/main/rl) folder. 
-Pre-trained models for relative approaches are available and are located on ["models"](https://github.com/bottamichele/Pong-Python-RL/tree/main/rl/models) folder under "rl" folder, 
+
+The relative code of RL implemented is located on "[rl](https://github.com/bottamichele/Pong-Python-RL/tree/main/rl)" folder. 
+Pre-trained models for relative approaches are available and are located on "[models](https://github.com/bottamichele/Pong-Python-RL/tree/main/rl/models)" folder under "rl" folder, 
 any one of them is loaded when you choose the corrispondent type of controller to use on [main.py](https://github.com/bottamichele/Pong-Python-RL/blob/main/main.py).
 
 # Reinforcement Learning approach
