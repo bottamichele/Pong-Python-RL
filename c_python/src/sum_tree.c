@@ -112,24 +112,13 @@ static int SumTree_Init(SumTree* self, PyObject* args, PyObject* kwds) {
     self->depth = num_leaves % ((int) pow(2.0, (int) log2(num_leaves))) == 0 ? (int) log2(num_leaves) : ((int) log2(num_leaves)) + 1;
     self->total_nodes = ((int) pow(2.0, self->depth + 1)) - 1;
     
+    //Initialize binary tree.
     npy_intp dimTree[1] = { self->total_nodes };
     self->tree = (PyObject*) PyArray_ZEROS(1, dimTree, NPY_FLOAT, 0);
     if (self->tree == NULL)
         return -1;
 
     return 0;
-}
-
-/* ---------- METHOF __reduce__() ---------- */
-static PyObject* SumTree_Reduce(SumTree* self, PyObject* Py_UNUSED(ignored)) {
-    Py_INCREF(self->tree);
-    PyObject* args = Py_BuildValue("(iiiO)", self->n_leaves, self->depth, self->total_nodes, self->tree);
-    if(args == NULL) {
-        Py_DECREF(self->tree);
-        return NULL;
-    }
-
-    return Py_BuildValue("(OO)", Py_TYPE(self), args);
 }
 
 /* ---------- METHOD set_priority() ---------- */
@@ -247,7 +236,6 @@ PyObject* SumTree_GetProbabilityOfBatch(SumTree* self, PyObject* args, void* clo
 }
 
 static PyMethodDef SumTree_Methods[] = {
-    { "__reduce__", (PyCFunction) SumTree_Reduce, METH_NOARGS, "method __reduce__"},
     { "set_priority", (PyCFunction) SumTree_SetPriority, METH_VARARGS, "Set a transiction's priority on tree.\n\nParameters\n--------------------\nidx: int\n\tindex of transiction\n\nprio : float\n\tpriority of transiction\n"},
     { "get_random_transiction", (PyCFunction) SumTree_GetRandomTransiction, METH_NOARGS, "Return a transiction randomly.\n\nReturn\n--------------------\nidx_trans: int\n\tindex of transiction\n" },
     { "sample_batch", (PyCFunction) SumTree_SampleBatch, METH_VARARGS, "Sample a batch of transiction indices.\n\nParameter\n--------------------\nbatch_size: int\n\tbatch size\n\nReturn\n----------\nbatch_idxs: list\n\tbatch of transiction indices\n"},

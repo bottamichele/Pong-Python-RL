@@ -36,6 +36,23 @@ class ProportionalPrioritizedMemory(Memory):
         self._epsilon = eps                                                 #Small value epsilon.
         self._idxs_sampled = None                                           #Last sample of batch indices
 
+    def __reduce__(self):
+        reduce_state = super().__reduce__()
+
+        if "_cum_prios" in reduce_state[2].keys():
+            dict_state = reduce_state[2].copy()
+            dict_state.pop("_cum_prios")
+            return reduce_state[0], reduce_state[1], dict_state
+        else:
+            return reduce_state
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+
+        self._cum_prios = SumTree(self._max_size)
+        for i in range(self._current_size):
+            self._cum_prios.set_priority(i, self._priorities[i] ** self.alpha)
+
     def store_transiction(self, obs, action, reward, next_obs, next_obs_done):
         #Set priority for current transiction.
         prio = np.max(self._priorities) if self._current_size > 0 else 1.0

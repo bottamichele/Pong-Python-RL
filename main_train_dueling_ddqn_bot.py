@@ -24,7 +24,7 @@ if __name__ == "__main__":
         application = DDDQNTrainingSAApp(training_session)
         application.train()
     elif not USE_SELF_PLAY and USE_PER:
-        training_session = DDDQNTraining_PER_SASession(250, OpponentType.BASIC_BOT, 500000, 64, 5000, eps_decay=4.95*10**-6)
+        training_session = DDDQNTraining_PER_SASession(500, OpponentType.BOT, 500000, 64, 5000, eps_decay=4.95*10**-6)
         #training_session.load_last_training_session()
         application = DDDQNTraining_PER_SAApp(training_session)
         application.train()
